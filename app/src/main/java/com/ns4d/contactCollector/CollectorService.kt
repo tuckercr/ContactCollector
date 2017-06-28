@@ -8,8 +8,8 @@ import android.support.v4.content.LocalBroadcastManager
 import android.text.TextUtils
 import android.util.Log
 import com.ns4d.contactCollector.db.ContactRepository
+import com.ns4d.contactCollector.prefs.Prefs
 import java.io.*
-
 
 /**
  * An [IntentService] subclass for the contact scan/collection
@@ -30,11 +30,14 @@ class CollectorService : IntentService("CollectorService") {
         }
     }
 
+    /**
+     * Saves the contacts to a file.
+     *
+     * TODO: what format should this be in
+     */
     private fun handleActionSave() {
 
         Log.d(TAG, "handleActionSave")
-        ContactsUtils.retrieveContacts(this)
-
         val root = android.os.Environment.getExternalStoragePublicDirectory(DIRECTORY_DOWNLOADS)
 
         val file = File(root.absolutePath, "contactsCollector.txt")
@@ -73,11 +76,19 @@ class CollectorService : IntentService("CollectorService") {
     /**
      * Handle action Foo in the provided background thread with the provided
      * parameters.
+     *
+     * TODO: use the timestamp
      */
     private fun handleActionScan(timestamp: Long) {
 
         Log.d(TAG, "handleActionScan: " + timestamp)
         ContactsUtils.retrieveContacts(this)
+
+        if (ContactsUtils.retrieveContacts(this)) {
+            val editor = Prefs.getEditor(this)
+            editor.putBoolean(Prefs.SCAN_COMPLETED, true)
+            editor.apply()
+        }
 
         LocalBroadcastManager.getInstance(this)
                 .sendBroadcast(Intent(ContactFragment().ACTION_REFRESH))

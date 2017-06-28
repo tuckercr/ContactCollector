@@ -20,7 +20,7 @@ class ContactsUtils {
 
     private static final String TAG = "ContactsUtils";
 
-    public static void retrieveContacts(Context context) {
+    public static boolean retrieveContacts(Context context) {
 
         ContentResolver cr = context.getContentResolver();
 
@@ -105,6 +105,12 @@ class ContactsUtils {
                     Log.v(TAG, contact.toString());
                 }
             }
+            return true;
+
+        } catch (Exception e) {
+            Log.e(TAG, "Caught: " + e.getMessage(), e);
+            return false;
+
         } finally {
             if (cur != null) {
                 cur.close();

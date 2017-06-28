@@ -1,7 +1,6 @@
 package com.ns4d.contactCollector
 
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,10 +9,10 @@ import java.text.DateFormat
 
 /**
  * [RecyclerView.Adapter] that can display [Contact]s
+ *
+ * TODO Databinding
  */
 class ContactRecyclerViewAdapter(private val mValues: List<Contact>) : RecyclerView.Adapter<ContactRecyclerViewAdapter.ViewHolder>() {
-
-    private val TAG = "ContactRecyclerViewAd"
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -39,9 +38,5 @@ class ContactRecyclerViewAdapter(private val mValues: List<Contact>) : RecyclerV
         override fun toString(): String {
             return super.toString() + " '" + mDetailsTextView.text + "'"
         }
-    }
-
-    fun save() {
-        Log.e(TAG, mValues.toString())
     }
 }

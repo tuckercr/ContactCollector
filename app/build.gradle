@@ -6,6 +6,11 @@ apply plugin: 'kotlin-kapt'
 android {
     compileSdkVersion 25
     buildToolsVersion "26.0.0"
+
+    dataBinding {
+        enabled true
+    }
+
     defaultConfig {
         applicationId "com.ns4d.contactCollector"
         minSdkVersion 18

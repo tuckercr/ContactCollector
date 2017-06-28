@@ -4,6 +4,7 @@ import android.Manifest
 import android.Manifest.permission.READ_CONTACTS
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.content.DialogInterface
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Environment
 import android.support.annotation.UiThread
@@ -18,6 +19,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import kotlinx.android.synthetic.main.fragment_contacts.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -155,15 +157,20 @@ class MainActivity : AppCompatActivity() {
      */
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
 
-        when (requestCode) {
-            PERMISSION_CONTACTS -> {
-                Toast.makeText(this, "Thanks.  Please wait a moment while we scan your address book.", Toast.LENGTH_LONG).show()
-                CollectorService.startActionScan(this, 0)
+        if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            when (requestCode) {
+                PERMISSION_CONTACTS -> {
+                    Toast.makeText(this, "Thanks.  Please wait a moment while we scan your address book.", Toast.LENGTH_LONG).show()
+                    CollectorService.startActionScan(this, 0)
+                }
+                PERMISSION_EXTERNAL_STORAGE -> {
+                    saveContacts()
+                }
+                else -> Log.e(TAG, "Unexpected permission code")
             }
-            PERMISSION_EXTERNAL_STORAGE -> {
-                saveContacts()
-            }
-            else -> Log.e(TAG, "Unexpected permission code")
+        } else {
+            Log.e(TAG, "Permission Denied")
+            emptyTextView.setText(R.string.please_grant_permission)
         }
     }
 }
