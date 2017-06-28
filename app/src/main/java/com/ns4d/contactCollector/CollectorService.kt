@@ -49,7 +49,7 @@ class CollectorService : IntentService("CollectorService") {
                     pw.println("company: " + contact.company)
                 }
                 if (!TextUtils.isEmpty(contact.jobTitle)) {
-                    pw.println("company: " + contact.jobTitle)
+                    pw.println("jobTitle: " + contact.jobTitle)
                 }
                 if (!contact.emails.isEmpty()) {
                     pw.println("emails: " + contact.emails)
