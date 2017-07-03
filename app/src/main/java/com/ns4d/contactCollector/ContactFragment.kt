@@ -57,8 +57,8 @@ class ContactFragment : Fragment() {
 
         } else {
             contactsRecyclerView.adapter = ContactRecyclerViewAdapter(contacts)
-            searchTextView.visibility = VISIBLE
-            searchImageView.visibility = VISIBLE
+//            searchTextView.visibility = VISIBLE
+//            searchImageView.visibility = VISIBLE
             emptyTextView.visibility = GONE
         }
     }

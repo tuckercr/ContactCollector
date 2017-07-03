@@ -19,6 +19,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import com.ns4d.contactCollector.db.ContactRepository
 import kotlinx.android.synthetic.main.fragment_contacts.*
 
 class MainActivity : AppCompatActivity() {
@@ -115,12 +116,23 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
-        if (item.itemId == R.id.action_save) {
-            if (requestExternalStoragePermission()) {
+        when {
+            item.itemId == R.id.action_save ->
+                if (requestExternalStoragePermission()) {
                 saveContacts()
                 return true
             } else {
                 Log.e(TAG, "Insufficient permission to save!")
+            }
+
+            item.itemId == R.id.action_about -> {
+
+                val size = ContactRepository.count()
+                val msg = getString(R.string.app_name) + "\nVersion: " + BuildConfig.VERSION_NAME + "." + BuildConfig.VERSION_CODE + "\nFound " + size + " contacts"
+                AlertDialog.Builder(this)
+                        .setTitle(R.string.action_about)
+                        .setMessage(msg)
+                        .show()
             }
         }
 

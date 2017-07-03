@@ -102,7 +102,8 @@ class ContactsUtils {
                     contact.setPhones(phones.toString());
                     contact.save();
 
-                    Log.v(TAG, contact.toString());
+                    // Uncomment for debugging
+                    // Log.v(TAG, contact.toString());
                 }
             }
             return true;

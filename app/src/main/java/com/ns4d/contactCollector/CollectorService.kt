@@ -41,10 +41,11 @@ class CollectorService : IntentService("CollectorService") {
         val root = android.os.Environment.getExternalStoragePublicDirectory(DIRECTORY_DOWNLOADS)
 
         val file = File(root.absolutePath, "contactsCollector.txt")
-
+        var count = 0
         try {
             val f = FileOutputStream(file)
             val pw = PrintWriter(f)
+
 
             for (contact in ContactRepository.getAll()) {
                 pw.println(contact.displayName)
@@ -61,9 +62,12 @@ class CollectorService : IntentService("CollectorService") {
                     pw.println("phones: " + contact.phones)
                 }
                 pw.println("")
+                pw.flush()
+                count++
             }
 
-            pw.flush()
+            Log.d(TAG, "handleActionSave - finished saving $count contacts")
+
             pw.close()
             f.close()
         } catch (e: FileNotFoundException) {

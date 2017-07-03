@@ -7,6 +7,7 @@ package com.ns4d.contactCollector.db
  */
 import com.ns4d.contactCollector.Contact
 import com.ns4d.contactCollector.Contact_Table
+import com.raizlabs.android.dbflow.sql.language.Method
 import com.raizlabs.android.dbflow.sql.language.Select
 
 object ContactRepository {
@@ -19,4 +20,7 @@ object ContactRepository {
                 .queryList()
     }
 
+    fun count(): Long {
+        return Select(Method.count()).from(Contact::class.java).count()
+    }
 }
