@@ -5,6 +5,8 @@ import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.LocalBroadcastManager
 import android.support.v7.widget.LinearLayoutManager
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +15,7 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.Toast
 import com.ns4d.contactCollector.db.ContactRepository
+import com.ns4d.contactCollector.model.Contact
 import com.ns4d.contactCollector.prefs.Prefs
 import com.ns4d.contactCollector.prefs.Prefs.PREFS_FILENAME
 import kotlinx.android.synthetic.main.fragment_contacts.*
@@ -25,13 +28,28 @@ class ContactFragment : Fragment() {
     val ACTION_REFRESH = "com.ns4d.contactCollector.REFRESH"
     val TAG = "ContactFragment"
     var prefs: SharedPreferences? = null
+    var contacts: List<Contact> = ArrayList()
+    var mostRecentlyUpdatedContact: Long = 0
 
     val refreshBroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
 
-            Toast.makeText(context, "Contacts (re)loaded", Toast.LENGTH_SHORT).show()
+            if (mostRecentlyUpdatedContact == prefs!!.getLong(Prefs.MOST_RECENT, -1)) {
+                Log.d(TAG, "Ignoring broadcast - contacts haven't changed")
+                return
+            }
 
-            // TODO: don't recreate the adapter unless anything changed
+            if (contacts.isNotEmpty()) {
+                Toast.makeText(context, "Contacts loaded", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(context, "Contacts reloaded", Toast.LENGTH_SHORT).show()
+
+                if (!searchTextView.text.isEmpty()) {
+                    filterContacts(searchTextView.text)
+                    return
+                }
+            }
+
             initUi()
         }
     }
@@ -41,11 +59,11 @@ class ContactFragment : Fragment() {
      */
     private fun initUi() {
 
-        val contacts = ContactRepository.getAll()
+        contacts = ContactRepository.getAll()
         contactsRecyclerView.adapter = ContactRecyclerViewAdapter(contacts)
         contactsRecyclerView.layoutManager = LinearLayoutManager(context)
 
-        if (contacts.size == 0) {
+        if (contacts.isEmpty()) {
             searchTextView.visibility = GONE
             searchImageView.visibility = GONE
             emptyTextView.visibility = VISIBLE
@@ -57,9 +75,10 @@ class ContactFragment : Fragment() {
             }
 
         } else {
-//            searchTextView.visibility = VISIBLE
-//            searchImageView.visibility = VISIBLE
+            searchTextView.visibility = VISIBLE
+            searchImageView.visibility = VISIBLE
             emptyTextView.visibility = GONE
+            mostRecentlyUpdatedContact = prefs!!.getLong(Prefs.MOST_RECENT, 0)
         }
     }
 
@@ -92,5 +111,36 @@ class ContactFragment : Fragment() {
 
         initUi()
 
+        searchTextView.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(charSequence: CharSequence, start: Int, count: Int,
+                                           after: Int) {
+                // Ignore
+            }
+
+            override fun onTextChanged(charSequence: CharSequence, start: Int, count: Int, after: Int) {
+                filterContacts(charSequence)
+            }
+
+            override fun afterTextChanged(editable: Editable) {
+                // Ignore
+            }
+        })
+
+    }
+
+    private fun filterContacts(charSequence: CharSequence) {
+        if (charSequence.isEmpty()) {
+            contactsRecyclerView.swapAdapter(ContactRecyclerViewAdapter(contacts), true)
+            return
+        }
+
+        val filteredContacts = ArrayList<Contact>()
+        contacts.forEach {
+
+            if (it.displayName.contains(charSequence, true)) {
+                filteredContacts.add(it)
+            }
+        }
+        contactsRecyclerView.swapAdapter(ContactRecyclerViewAdapter(filteredContacts), true)
     }
 }

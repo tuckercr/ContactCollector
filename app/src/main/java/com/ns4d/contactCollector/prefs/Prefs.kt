@@ -11,7 +11,12 @@ import com.ns4d.contactCollector.BuildConfig
  */
 object Prefs {
     const val PREFS_FILENAME = "contact.prefs"
+
+    // This assumes that the version is incremented with each DB schema change
     const val SCAN_COMPLETED = "scan.completed." + BuildConfig.VERSION_CODE
+
+    // The lastModified date of the most recently updated contact
+    const val MOST_RECENT = "most.recent.contact"
 
     fun getEditor(context: Context): SharedPreferences.Editor {
         return context.getSharedPreferences(Prefs.PREFS_FILENAME, 0)!!.edit()

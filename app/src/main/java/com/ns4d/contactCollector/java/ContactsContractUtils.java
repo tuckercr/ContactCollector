@@ -2,6 +2,7 @@ package com.ns4d.contactCollector.java;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
@@ -10,6 +11,7 @@ import android.util.Log;
 import com.ns4d.contactCollector.model.Contact;
 import com.ns4d.contactCollector.model.Email;
 import com.ns4d.contactCollector.model.Phone;
+import com.ns4d.contactCollector.prefs.Prefs;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -36,8 +38,9 @@ public class ContactsContractUtils {
 
         Cursor cur = null;
 
-        try {
+        long mostRecentlyUpdatedContactTimestamp = 0;
 
+        try {
             cur = cr.query(ContactsContract.Contacts.CONTENT_URI,
                     null, null, null, null);
             if (cur != null && cur.getCount() > 0) {
@@ -50,6 +53,9 @@ public class ContactsContractUtils {
                     String thumbnailUri = cur.getString(cur.getColumnIndex(ContactsContract.Contacts.PHOTO_THUMBNAIL_URI));
                     long lastModified = cur.getLong(cur.getColumnIndex(ContactsContract.Contacts.CONTACT_LAST_UPDATED_TIMESTAMP));
 
+                    if (lastModified > mostRecentlyUpdatedContactTimestamp) {
+                        mostRecentlyUpdatedContactTimestamp = lastModified;
+                    }
                     Set<Phone> phones = new HashSet<>();
                     Set<Email> emails = new HashSet<>();
 
@@ -230,6 +236,10 @@ public class ContactsContractUtils {
             if (cur != null) {
                 cur.close();
             }
+
+            SharedPreferences.Editor editor = context.getSharedPreferences(Prefs.PREFS_FILENAME, 0).edit();
+            editor.putLong(Prefs.MOST_RECENT, mostRecentlyUpdatedContactTimestamp);
+            editor.apply();
         }
     }
 
