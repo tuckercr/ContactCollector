@@ -10,6 +10,6 @@ import com.raizlabs.android.dbflow.annotation.Database
 @Database(name = AppDatabase.NAME, version = AppDatabase.VERSION)
 object AppDatabase {
 
-    const val NAME: String = "contactCache"
+    const val NAME: String = "contactDb"
     const val VERSION: Int = 1
 }

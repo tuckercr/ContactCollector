@@ -1,10 +1,11 @@
-package com.ns4d.contactCollector
+package com.ns4d.contactCollector.model
 
 import com.ns4d.contactCollector.db.AppDatabase
 import com.raizlabs.android.dbflow.annotation.Column
 import com.raizlabs.android.dbflow.annotation.PrimaryKey
 import com.raizlabs.android.dbflow.annotation.Table
 import com.raizlabs.android.dbflow.structure.BaseModel
+import java.text.DateFormat
 
 /**
  * Simple contact class
@@ -36,8 +37,27 @@ class Contact : BaseModel() {
     @Column(name = "phones")
     var phones: String = ""
 
-    override fun toString(): String {
+    @Column(name = "groups")
+    var groups: String = ""
 
-        return "id='$id'\ncompany='$company'\njobTitle='$jobTitle'\nemails=$emails\nphones=$phones"
+    @Column(name = "websites")
+    var websites: String = ""
+
+    @Column(name = "lookupKey")
+    var lookupKey: String = ""
+
+    @Column(name = "thumbnailUri")
+    var thumbnailUri: String? = ""
+
+    @Column(name = "accountDetails")
+    var accountDetails: String = ""
+
+    @Column(name = "misc")
+    var misc: String = ""
+
+    override fun toString(): String {
+        val lastModStr = DateFormat.getDateTimeInstance().format(lastModified)
+        return "id=$id\nlastModified=$lastModStr\naccountDetails=$accountDetails\nemails=$emails\nphones=$phones\n" +
+                "groups=[$groups]\nwebsites=[$websites]\n-----\neverything=[$misc]"
     }
 }

@@ -15,7 +15,7 @@ android {
         applicationId "com.ns4d.contactCollector"
         minSdkVersion 18
         targetSdkVersion 25
-        versionCode 3
+        versionCode 4
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -41,6 +41,7 @@ dependencies {
     implementation 'com.android.support:support-annotations:25.4.0'
     implementation 'com.android.support:design:25.4.0'
     implementation 'com.android.support:support-v4:25.4.0'
+    compile 'com.jaredrummler:fastscroll-recyclerview:1.0.3'
 
     kapt "com.github.Raizlabs.DBFlow:dbflow-processor:4.0.4"
     compile "com.github.Raizlabs.DBFlow:dbflow-core:4.0.4"

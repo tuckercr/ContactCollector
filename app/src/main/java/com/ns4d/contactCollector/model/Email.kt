@@ -1,4 +1,4 @@
-package com.ns4d.contactCollector
+package com.ns4d.contactCollector.model
 
 /**
  * Email Address

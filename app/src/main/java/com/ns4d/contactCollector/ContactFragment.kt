@@ -42,9 +42,10 @@ class ContactFragment : Fragment() {
     private fun initUi() {
 
         val contacts = ContactRepository.getAll()
+        contactsRecyclerView.adapter = ContactRecyclerViewAdapter(contacts)
+        contactsRecyclerView.layoutManager = LinearLayoutManager(context)
 
         if (contacts.size == 0) {
-
             searchTextView.visibility = GONE
             searchImageView.visibility = GONE
             emptyTextView.visibility = VISIBLE
@@ -56,7 +57,6 @@ class ContactFragment : Fragment() {
             }
 
         } else {
-            contactsRecyclerView.adapter = ContactRecyclerViewAdapter(contacts)
 //            searchTextView.visibility = VISIBLE
 //            searchImageView.visibility = VISIBLE
             emptyTextView.visibility = GONE
@@ -90,7 +90,7 @@ class ContactFragment : Fragment() {
     override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        contactsRecyclerView.layoutManager = LinearLayoutManager(context)
         initUi()
+
     }
 }

@@ -5,8 +5,8 @@ package com.ns4d.contactCollector.db
  *
  * Created by ctucker on 6/22/17.
  */
-import com.ns4d.contactCollector.Contact
-import com.ns4d.contactCollector.Contact_Table
+import com.ns4d.contactCollector.model.Contact
+import com.ns4d.contactCollector.model.Contact_Table
 import com.raizlabs.android.dbflow.sql.language.Method
 import com.raizlabs.android.dbflow.sql.language.Select
 

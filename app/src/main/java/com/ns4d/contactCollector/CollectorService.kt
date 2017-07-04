@@ -8,6 +8,7 @@ import android.support.v4.content.LocalBroadcastManager
 import android.text.TextUtils
 import android.util.Log
 import com.ns4d.contactCollector.db.ContactRepository
+import com.ns4d.contactCollector.java.ContactsContractUtils
 import com.ns4d.contactCollector.prefs.Prefs
 import java.io.*
 
@@ -49,17 +50,27 @@ class CollectorService : IntentService("CollectorService") {
 
             for (contact in ContactRepository.getAll()) {
                 pw.println(contact.displayName)
+                pw.println("id: ${contact.id}")
                 if (!TextUtils.isEmpty(contact.company)) {
-                    pw.println("company: " + contact.company)
+                    pw.println("company: ${contact.company}")
                 }
                 if (!TextUtils.isEmpty(contact.jobTitle)) {
-                    pw.println("jobTitle: " + contact.jobTitle)
+                    pw.println("jobTitle: ${contact.jobTitle}")
                 }
                 if (!contact.emails.isEmpty()) {
-                    pw.println("emails: " + contact.emails)
+                    pw.println("emails: ${contact.emails}")
                 }
                 if (!contact.phones.isEmpty()) {
-                    pw.println("phones: " + contact.phones)
+                    pw.println("phones: ${contact.phones}")
+                }
+                if (!contact.groups.isEmpty()) {
+                    pw.println("groups: ${contact.groups}")
+                }
+                if (!contact.websites.isEmpty()) {
+                    pw.println("websites: ${contact.websites}")
+                }
+                if (!contact.misc.isEmpty()) {
+                    pw.println("misc: ${contact.misc}")
                 }
                 pw.println("")
                 pw.flush()
@@ -86,9 +97,9 @@ class CollectorService : IntentService("CollectorService") {
     private fun handleActionScan(timestamp: Long) {
 
         Log.d(TAG, "handleActionScan: " + timestamp)
-        ContactsUtils.retrieveContacts(this)
+        ContactsContractUtils.retrieveContacts(this)
 
-        if (ContactsUtils.retrieveContacts(this)) {
+        if (ContactsContractUtils.retrieveContacts(this)) {
             val editor = Prefs.getEditor(this)
             editor.putBoolean(Prefs.SCAN_COMPLETED, true)
             editor.apply()

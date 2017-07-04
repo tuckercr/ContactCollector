@@ -8,7 +8,6 @@ import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Environment
 import android.support.annotation.UiThread
-import android.support.design.widget.FloatingActionButton
 import android.support.v4.app.ActivityCompat
 import android.support.v4.content.ContextCompat
 import android.support.v4.content.PermissionChecker.PERMISSION_GRANTED
@@ -34,13 +33,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         val toolbar = findViewById(R.id.toolbar) as Toolbar
         setSupportActionBar(toolbar)
-
-        val fab = findViewById(R.id.fab) as FloatingActionButton
-        fab.setOnClickListener {
-            if (requestContactsPermission()) {
-                CollectorService.startActionScan(this, 0)
-            }
-        }
 
         if (requestContactsPermission()) {
             CollectorService.startActionScan(this, 0)
@@ -119,11 +111,11 @@ class MainActivity : AppCompatActivity() {
         when {
             item.itemId == R.id.action_save ->
                 if (requestExternalStoragePermission()) {
-                saveContacts()
-                return true
-            } else {
-                Log.e(TAG, "Insufficient permission to save!")
-            }
+                    saveContacts()
+                    return true
+                } else {
+                    Log.e(TAG, "Insufficient permission to save!")
+                }
 
             item.itemId == R.id.action_about -> {
 
@@ -133,6 +125,13 @@ class MainActivity : AppCompatActivity() {
                         .setTitle(R.string.action_about)
                         .setMessage(msg)
                         .show()
+            }
+
+            item.itemId == R.id.action_reload -> {
+
+                if (requestContactsPermission()) {
+                    CollectorService.startActionScan(this, 0)
+                }
             }
         }
 

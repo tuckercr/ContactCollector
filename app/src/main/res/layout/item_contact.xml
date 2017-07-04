@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -7,38 +8,71 @@
     android:layout_marginRight="16dp"
     android:orientation="vertical">
 
+    <QuickContactBadge
+        android:id="@+id/quickContactBadge"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginTop="8dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/displayNameTextView"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="0dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:ellipsize="end"
         android:maxLines="1"
         android:textSize="16sp"
         android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/quickContactBadge"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="Joe Smith" />
 
     <TextView
-        android:id="@+id/lastModifiedTextView"
-        android:layout_width="match_parent"
+        android:id="@+id/jobTitleTextView"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="0dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="2dp"
         android:ellipsize="end"
-        android:fontFamily="serif"
         android:maxLines="1"
         android:textSize="14sp"
         android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/quickContactBadge"
+        app:layout_constraintTop_toBottomOf="@+id/displayNameTextView"
+        tools:text="Joe Smith" />
+
+    <TextView
+        android:id="@+id/companyTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="2dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/quickContactBadge"
+        app:layout_constraintTop_toBottomOf="@+id/jobTitleTextView"
         tools:text="Joe Smith" />
 
     <TextView
         android:id="@+id/detailsTextView"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
-        android:layout_marginTop="0dp"
+        android:layout_marginTop="8dp"
         android:minLines="3"
         android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/companyTextView"
         tools:text="lorem ipsum: +12345678\nlorem ipsum: +12345678\nlorem ipsum: +12345678\nlorem ipsum: +12345678\nlorem ipsum: +12345678\n" />
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>
