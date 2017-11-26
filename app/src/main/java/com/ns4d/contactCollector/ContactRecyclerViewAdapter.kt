@@ -94,11 +94,11 @@ class ContactRecyclerViewAdapter(private val mValues: List<Contact>) : RecyclerV
     }
 
     inner class ViewHolder(mView: View) : RecyclerView.ViewHolder(mView) {
-        val mDisplayNameTextView: TextView = mView.findViewById(R.id.displayNameTextView) as TextView
-        val mJobTitleTextView: TextView = mView.findViewById(R.id.jobTitleTextView) as TextView
-        val mCompanyNameTextView: TextView = mView.findViewById(R.id.companyTextView) as TextView
-        val mDetailsTextView: TextView = mView.findViewById(R.id.detailsTextView) as TextView
-        val mQuickContactBadge: QuickContactBadge = mView.findViewById(R.id.quickContactBadge) as QuickContactBadge
+        val mDisplayNameTextView: TextView = mView.findViewById(R.id.displayNameTextView)
+        val mJobTitleTextView: TextView = mView.findViewById(R.id.jobTitleTextView)
+        val mCompanyNameTextView: TextView = mView.findViewById(R.id.companyTextView)
+        val mDetailsTextView: TextView = mView.findViewById(R.id.detailsTextView)
+        val mQuickContactBadge: QuickContactBadge = mView.findViewById(R.id.quickContactBadge)
 
         override fun toString(): String {
             return super.toString() + " '" + mDetailsTextView.text + "'"

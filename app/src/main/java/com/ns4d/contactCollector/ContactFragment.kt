@@ -21,7 +21,7 @@ import com.ns4d.contactCollector.prefs.Prefs.PREFS_FILENAME
 import kotlinx.android.synthetic.main.fragment_contacts.*
 
 /**
- * A fragment representing a list of Items.
+ * A fragment containing a search field and a RecyclerView list of contacts.
  */
 class ContactFragment : Fragment() {
 
@@ -39,18 +39,18 @@ class ContactFragment : Fragment() {
                 return
             }
 
-            if (contacts.isNotEmpty()) {
+            if (contacts.isEmpty()) {
                 Toast.makeText(context, "Contacts loaded", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(context, "Contacts reloaded", Toast.LENGTH_SHORT).show()
-
-                if (!searchTextView.text.isEmpty()) {
-                    filterContacts(searchTextView.text)
-                    return
-                }
+                initUi()
+                return
             }
 
+            Toast.makeText(context, "Contacts reloaded", Toast.LENGTH_SHORT).show()
             initUi()
+            if (!searchTextView.text.isEmpty()) {
+                filterContacts(searchTextView.text)
+                return
+            }
         }
     }
 
@@ -85,28 +85,30 @@ class ContactFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        LocalBroadcastManager.getInstance(context)
+        activity?.let {
+            LocalBroadcastManager.getInstance(it)
                 .registerReceiver(refreshBroadcastReceiver, IntentFilter(ACTION_REFRESH))
-        prefs = activity.getSharedPreferences(PREFS_FILENAME, 0)
+            prefs = it.getSharedPreferences(PREFS_FILENAME, 0)
+        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
         try {
-            context.unregisterReceiver(refreshBroadcastReceiver)
+            context?.unregisterReceiver(refreshBroadcastReceiver)
         } catch (e: IllegalArgumentException) {
             Log.e(TAG, "Caught: " + e.message, e)
 
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater?, container: ViewGroup?,
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
 
-        return inflater!!.inflate(R.layout.fragment_contacts, container, false)
+        return inflater.inflate(R.layout.fragment_contacts, container, false)
     }
 
-    override fun onViewCreated(view: View?, savedInstanceState: Bundle?) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         initUi()
