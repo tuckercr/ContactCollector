@@ -2,9 +2,6 @@ package com.ns4d.contactCollector
 
 import android.content.*
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.content.LocalBroadcastManager
-import android.support.v7.widget.LinearLayoutManager
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -14,6 +11,7 @@ import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.ns4d.contactCollector.db.ContactRepository
 import com.ns4d.contactCollector.model.Contact
 import com.ns4d.contactCollector.prefs.Prefs
@@ -23,15 +21,13 @@ import kotlinx.android.synthetic.main.fragment_contacts.*
 /**
  * A fragment containing a search field and a RecyclerView list of contacts.
  */
-class ContactFragment : Fragment() {
+class ContactFragment : androidx.fragment.app.Fragment() {
 
-    val ACTION_REFRESH = "com.ns4d.contactCollector.REFRESH"
-    val TAG = "ContactFragment"
     var prefs: SharedPreferences? = null
     var contacts: List<Contact> = ArrayList()
     var mostRecentlyUpdatedContact: Long = 0
 
-    val refreshBroadcastReceiver = object : BroadcastReceiver() {
+    private val refreshBroadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, intent: Intent) {
 
             if (mostRecentlyUpdatedContact == prefs!!.getLong(Prefs.MOST_RECENT, -1)) {
@@ -61,7 +57,7 @@ class ContactFragment : Fragment() {
 
         contacts = ContactRepository.getAll()
         contactsRecyclerView.adapter = ContactRecyclerViewAdapter(contacts)
-        contactsRecyclerView.layoutManager = LinearLayoutManager(context)
+        contactsRecyclerView.layoutManager = androidx.recyclerview.widget.LinearLayoutManager(context)
 
         if (contacts.isEmpty()) {
             searchTextView.visibility = GONE
@@ -85,9 +81,9 @@ class ContactFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        activity?.let {
+        context?.let {
             LocalBroadcastManager.getInstance(it)
-                .registerReceiver(refreshBroadcastReceiver, IntentFilter(ACTION_REFRESH))
+                    .registerReceiver(refreshBroadcastReceiver, IntentFilter(ACTION_REFRESH))
             prefs = it.getSharedPreferences(PREFS_FILENAME, 0)
         }
     }
@@ -95,7 +91,9 @@ class ContactFragment : Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         try {
-            context?.unregisterReceiver(refreshBroadcastReceiver)
+            context?.let {
+                LocalBroadcastManager.getInstance(it).unregisterReceiver(refreshBroadcastReceiver)
+            }
         } catch (e: IllegalArgumentException) {
             Log.e(TAG, "Caught: " + e.message, e)
 
@@ -144,5 +142,10 @@ class ContactFragment : Fragment() {
             }
         }
         contactsRecyclerView.swapAdapter(ContactRecyclerViewAdapter(filteredContacts), true)
+    }
+
+    companion object {
+        const val ACTION_REFRESH = "com.ns4d.contactCollector.REFRESH"
+        const val TAG = "ContactFragment"
     }
 }

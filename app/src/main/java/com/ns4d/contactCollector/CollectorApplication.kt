@@ -9,6 +9,7 @@ import com.raizlabs.android.dbflow.config.FlowManager
  *
  * Created by ctucker on 6/22/17.
  */
+@Suppress("unused")
 class CollectorApplication : Application() {
 
     override fun onCreate() {

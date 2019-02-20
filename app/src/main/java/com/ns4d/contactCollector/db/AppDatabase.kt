@@ -7,6 +7,7 @@ import com.raizlabs.android.dbflow.annotation.Database
  *
  * Created by ctucker on 6/22/17.
  */
+@Suppress("MemberVisibilityCanBePrivate")
 @Database(name = AppDatabase.NAME, version = AppDatabase.VERSION)
 object AppDatabase {
 

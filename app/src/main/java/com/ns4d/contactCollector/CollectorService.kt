@@ -4,9 +4,10 @@ import android.app.IntentService
 import android.content.Context
 import android.content.Intent
 import android.os.Environment.DIRECTORY_DOWNLOADS
-import android.support.v4.content.LocalBroadcastManager
 import android.text.TextUtils
 import android.util.Log
+import android.widget.Toast
+import androidx.core.app.JobIntentService
 import com.ns4d.contactCollector.db.ContactRepository
 import com.ns4d.contactCollector.java.ContactsContractUtils
 import com.ns4d.contactCollector.prefs.Prefs
@@ -15,20 +16,20 @@ import java.io.*
 /**
  * An [IntentService] subclass for the contact scan/collection
  */
-class CollectorService : IntentService("CollectorService") {
+class CollectorService : JobIntentService() {
 
-    private val TAG = "CollectorService"
-
-    override fun onHandleIntent(intent: Intent?) {
-        if (intent != null) {
-            val action = intent.action
-            if (ACTION_SCAN == action) {
-                val timestamp = intent.getLongExtra(EXTRA_TIMESTAMP, 0L)
-                handleActionScan(timestamp)
-            } else if (ACTION_SAVE == action) {
-                handleActionSave()
-            }
+    override fun onHandleWork(intent: Intent) {
+        if (ACTION_SCAN == intent.action) {
+            val timestamp = intent.getLongExtra(EXTRA_TIMESTAMP, 0L)
+            handleActionScan(timestamp)
+        } else if (ACTION_SAVE == intent.action) {
+            handleActionSave()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Toast.makeText(this, "all work complete", Toast.LENGTH_LONG).show()
     }
 
     /**
@@ -96,7 +97,7 @@ class CollectorService : IntentService("CollectorService") {
      */
     private fun handleActionScan(timestamp: Long) {
 
-        Log.d(TAG, "handleActionScan: " + timestamp)
+        Log.d(TAG, "handleActionScan: $timestamp")
         ContactsContractUtils.retrieveContacts(this)
 
         if (ContactsContractUtils.retrieveContacts(this)) {
@@ -105,33 +106,35 @@ class CollectorService : IntentService("CollectorService") {
             editor.apply()
         }
 
-        LocalBroadcastManager.getInstance(this)
-                .sendBroadcast(Intent(ContactFragment().ACTION_REFRESH))
+        androidx.localbroadcastmanager.content.LocalBroadcastManager.getInstance(this)
+                .sendBroadcast(Intent(ContactFragment.ACTION_REFRESH))
     }
 
     companion object {
 
-        private val ACTION_SCAN = "com.ns4d.contactCollector.action.SCAN"
-        private val ACTION_SAVE = "com.ns4d.contactCollector.action.SAVE"
-        private val EXTRA_TIMESTAMP = "com.ns4d.contactCollector.extra.TIMESTAMP"
+        private const val ACTION_SCAN = "com.ns4d.contactCollector.action.SCAN"
+        private const val ACTION_SAVE = "com.ns4d.contactCollector.action.SAVE"
+        private const val EXTRA_TIMESTAMP = "com.ns4d.contactCollector.extra.TIMESTAMP"
+        private const val JOB_ID = 1000
+        private const val TAG = "CollectorService"
 
         /**
          * Starts this service to scan the contacts.
          *
          * @param timestamp Optional timestamp.  Only contacts modified after this will be queried.
          */
-        fun startActionScan(context: Context, timestamp: Long) {
+        fun enqueueActionScan(context: Context, timestamp: Long) {
 
             val intent = Intent(context, CollectorService::class.java)
             intent.action = ACTION_SCAN
             intent.putExtra(EXTRA_TIMESTAMP, timestamp)
-            context.startService(intent)
+            enqueueWork(context, CollectorService::class.java, JOB_ID, intent)
         }
 
-        fun startActionSave(context: Context) {
+        fun enqueueActionSave(context: Context) {
             val intent = Intent(context, CollectorService::class.java)
             intent.action = ACTION_SAVE
-            context.startService(intent)
+            enqueueWork(context, CollectorService::class.java, JOB_ID, intent)
         }
     }
 }

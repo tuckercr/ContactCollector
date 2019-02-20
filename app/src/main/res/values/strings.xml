@@ -7,4 +7,11 @@
     <string name="please_wait">Please wait&#8230;</string>
     <string name="please_grant_permission">This app does not work without permission to read your Contacts</string>
     <string name="action_about">About</string>
+    <string name="save">Save</string>
+    <string name="save_confirmation_msg">Your contacts will be saved to a file named contactsCollector.txt in your Downloads folder.</string>
+    <string name="storage_locked">External storage is locked</string>
+    <string name="please_wait_msg">Thanks.  Please wait a moment while we scan your address book.</string>
+    <string name="permission_required">Permission Required</string>
+    <string name="pls_grant_msg">Please grant permission to read your contacts.</string>
+    <string name="rationale_msg">To save, please grant permission to write to external storage.</string>
 </resources>

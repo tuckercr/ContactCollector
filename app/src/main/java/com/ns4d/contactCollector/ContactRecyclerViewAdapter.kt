@@ -6,12 +6,12 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
 import android.provider.ContactsContract
-import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.QuickContactBadge
 import android.widget.TextView
+import androidx.recyclerview.widget.RecyclerView
 import com.jaredrummler.fastscrollrecyclerview.FastScrollRecyclerView
 import com.ns4d.contactCollector.model.Contact
 import java.io.IOException
@@ -20,7 +20,7 @@ import java.util.*
 /**
  * [RecyclerView.Adapter] that can display [Contact]s
  */
-class ContactRecyclerViewAdapter(private val mValues: List<Contact>) : RecyclerView.Adapter<ContactRecyclerViewAdapter.ViewHolder>()
+class ContactRecyclerViewAdapter(private val mValues: List<Contact>) : androidx.recyclerview.widget.RecyclerView.Adapter<ContactRecyclerViewAdapter.ViewHolder>()
         , FastScrollRecyclerView.SectionedAdapter {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -93,7 +93,7 @@ class ContactRecyclerViewAdapter(private val mValues: List<Contact>) : RecyclerV
         return mValues.size
     }
 
-    inner class ViewHolder(mView: View) : RecyclerView.ViewHolder(mView) {
+    inner class ViewHolder(mView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(mView) {
         val mDisplayNameTextView: TextView = mView.findViewById(R.id.displayNameTextView)
         val mJobTitleTextView: TextView = mView.findViewById(R.id.jobTitleTextView)
         val mCompanyNameTextView: TextView = mView.findViewById(R.id.companyTextView)

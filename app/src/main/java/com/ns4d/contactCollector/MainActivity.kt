@@ -7,26 +7,21 @@ import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Environment
-import android.support.annotation.UiThread
-import android.support.v4.app.ActivityCompat
-import android.support.v4.content.ContextCompat
-import android.support.v4.content.PermissionChecker.PERMISSION_GRANTED
-import android.support.v7.app.AlertDialog
-import android.support.v7.app.AppCompatActivity
-import android.support.v7.widget.Toolbar
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.annotation.UiThread
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
+import androidx.core.content.PermissionChecker.PERMISSION_GRANTED
 import com.ns4d.contactCollector.db.ContactRepository
 import kotlinx.android.synthetic.main.fragment_contacts.*
 
 class MainActivity : AppCompatActivity() {
-
-    var PERMISSION_CONTACTS = 1000
-    var PERMISSION_EXTERNAL_STORAGE = 1001
-
-    var TAG = "MainActivity"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +30,7 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
 
         if (requestContactsPermission()) {
-            CollectorService.startActionScan(this, 0)
+            CollectorService.enqueueActionScan(this, 0)
         }
     }
 
@@ -43,12 +38,12 @@ class MainActivity : AppCompatActivity() {
     fun showRationaleForContacts() {
 
         AlertDialog.Builder(this)
-                .setTitle("Permission Required")
-                .setMessage("Please grant permission to read your contacts.")
-                .setPositiveButton(android.R.string.ok, { _: DialogInterface, _: Int ->
+                .setTitle(R.string.permission_required)
+                .setMessage(R.string.pls_grant_msg)
+                .setPositiveButton(android.R.string.ok) { _: DialogInterface, _: Int ->
                     ActivityCompat.requestPermissions(this, arrayOf(READ_CONTACTS),
                             PERMISSION_CONTACTS)
-                })
+                }
                 .show()
     }
 
@@ -56,19 +51,19 @@ class MainActivity : AppCompatActivity() {
     fun showRationaleForStorage() {
 
         AlertDialog.Builder(this)
-                .setTitle("Permission Required")
-                .setMessage("To save, please grant permission to write to external storage.")
-                .setPositiveButton(android.R.string.ok, { _: DialogInterface, _: Int ->
+                .setTitle(R.string.permission_required)
+                .setMessage(R.string.rationale_msg)
+                .setPositiveButton(android.R.string.ok) { _: DialogInterface, _: Int ->
                     ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
                             PERMISSION_EXTERNAL_STORAGE)
-                })
+                }
                 .show()
     }
 
     /**
      * Check and request READ_CONTACTS permission
      */
-    fun requestContactsPermission(): Boolean {
+    private fun requestContactsPermission(): Boolean {
 
         if (ContextCompat.checkSelfPermission(this, READ_CONTACTS) == PERMISSION_GRANTED) {
             return true
@@ -86,7 +81,7 @@ class MainActivity : AppCompatActivity() {
     /**
      * Check and request WRITE_EXTERNAL_STORAGE permission
      */
-    fun requestExternalStoragePermission(): Boolean {
+    private fun requestExternalStoragePermission(): Boolean {
 
         if (ContextCompat.checkSelfPermission(this, WRITE_EXTERNAL_STORAGE) == PERMISSION_GRANTED) {
             return true
@@ -130,7 +125,7 @@ class MainActivity : AppCompatActivity() {
             item.itemId == R.id.action_reload -> {
 
                 if (requestContactsPermission()) {
-                    CollectorService.startActionScan(this, 0)
+                    CollectorService.enqueueActionScan(this, 0)
                 }
             }
         }
@@ -143,17 +138,18 @@ class MainActivity : AppCompatActivity() {
      */
     private fun saveContacts() {
 
-        AlertDialog.Builder(this).setTitle("Save")
-                .setMessage("Your contacts will be saved to a file named contactsCollector.txt in your Downloads folder.")
-                .setPositiveButton(android.R.string.yes, { _: DialogInterface, _: Int ->
+        AlertDialog.Builder(this)
+                .setTitle(R.string.save)
+                .setMessage(R.string.save_confirmation_msg)
+                .setPositiveButton(android.R.string.yes) { _: DialogInterface, _: Int ->
 
                     if (isExternalStorageWritable()) {
-                        CollectorService.startActionSave(this)
+                        CollectorService.enqueueActionSave(this)
                     } else {
-                        Toast.makeText(MainActivity@ this, "External storage is locked", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, getString(R.string.storage_locked), Toast.LENGTH_SHORT).show()
                     }
 
-                }).show()
+                }.show()
     }
 
     /**
@@ -171,8 +167,8 @@ class MainActivity : AppCompatActivity() {
         if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             when (requestCode) {
                 PERMISSION_CONTACTS -> {
-                    Toast.makeText(this, "Thanks.  Please wait a moment while we scan your address book.", Toast.LENGTH_LONG).show()
-                    CollectorService.startActionScan(this, 0)
+                    Toast.makeText(this, R.string.please_wait_msg, Toast.LENGTH_LONG).show()
+                    CollectorService.enqueueActionScan(this, 0)
                 }
                 PERMISSION_EXTERNAL_STORAGE -> {
                     saveContacts()
@@ -183,5 +179,11 @@ class MainActivity : AppCompatActivity() {
             Log.e(TAG, "Permission Denied")
             emptyTextView.setText(R.string.please_grant_permission)
         }
+    }
+
+    companion object {
+        private const val PERMISSION_CONTACTS = 1000
+        private const val PERMISSION_EXTERNAL_STORAGE = 1001
+        private const val TAG = "MainActivity"
     }
 }

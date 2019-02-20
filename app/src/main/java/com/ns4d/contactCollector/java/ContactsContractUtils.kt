@@ -22,7 +22,7 @@ import java.util.*
  */
 object ContactsContractUtils {
 
-    private val TAG = "ContactsContractUtils"
+    private const val TAG = "ContactsContractUtils"
 
     fun retrieveContacts(context: Context): Boolean {
 
@@ -183,7 +183,6 @@ object ContactsContractUtils {
                     }
 
 
-                    // FIXME get LinkedIn
                     val contact = Contact()
                     contact.id = id
                     contact.accountDetails = accountDetails.toString()
@@ -191,8 +190,8 @@ object ContactsContractUtils {
                     contact.thumbnailUri = thumbnailUri
                     contact.displayName = name
                     contact.lastModified = lastModified
-                    contact.jobTitle = if (jobTitle == null) "" else jobTitle
-                    contact.company = if (company == null) "" else company
+                    contact.jobTitle = jobTitle ?: ""
+                    contact.company = company ?: ""
                     contact.emails = emails.toString()
                     contact.phones = phones.toString()
                     contact.groups = groups.toString()
@@ -211,9 +210,7 @@ object ContactsContractUtils {
             return false
 
         } finally {
-            if (cur != null) {
-                cur.close()
-            }
+            cur?.close()
 
             context.getSharedPreferences(Prefs.PREFS_FILENAME, 0)
                     .edit()
@@ -237,7 +234,7 @@ object ContactsContractUtils {
                 while (groupsCursor.moveToNext()) {
                     val groupTitle = groupsCursor.getString(1)
                     val id = groupsCursor.getString(0)
-                    groupsMap.put(id, groupTitle)
+                    groupsMap[id] = groupTitle
                 }
             }
 
@@ -245,9 +242,7 @@ object ContactsContractUtils {
             Log.e(TAG, "Caught: " + e.message, e)
 
         } finally {
-            if (groupsCursor != null) {
-                groupsCursor.close()
-            }
+            groupsCursor?.close()
         }
 
         return groupsMap
@@ -282,7 +277,7 @@ object ContactsContractUtils {
                     val contactId = dataCursor.getString(dataCursor.getColumnIndex(ContactsContract.Data.CONTACT_ID))
                     val displayName = dataCursor.getString(dataCursor.getColumnIndex(ContactsContract.Data.DISPLAY_NAME))
                     val groupId = dataCursor.getString(dataCursor.getColumnIndex(ContactsContract.Data.DATA1))
-                    map.put(contactId, displayName)
+                    map[contactId] = displayName
 
                     Log.d(TAG, "contact_id: $contactId  contact: $displayName   groupID: $groupId")
                 } while (dataCursor.moveToNext())
@@ -290,9 +285,7 @@ object ContactsContractUtils {
 
             return map
         } finally {
-            if (dataCursor != null) {
-                dataCursor.close()
-            }
+            dataCursor?.close()
         }
     }
 }
