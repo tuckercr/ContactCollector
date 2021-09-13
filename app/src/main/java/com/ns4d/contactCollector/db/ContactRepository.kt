@@ -21,6 +21,6 @@ object ContactRepository {
     }
 
     fun count(): Long {
-        return Select(Method.count()).from(Contact::class.java).count()
+        return Select(Method.count()).from(Contact::class.java).longValue()
     }
 }

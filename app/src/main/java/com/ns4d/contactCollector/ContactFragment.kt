@@ -43,7 +43,7 @@ class ContactFragment : androidx.fragment.app.Fragment() {
 
             Toast.makeText(context, "Contacts reloaded", Toast.LENGTH_SHORT).show()
             initUi()
-            if (!searchTextView.text.isEmpty()) {
+            if (searchTextView.text.isNotEmpty()) {
                 filterContacts(searchTextView.text)
                 return
             }

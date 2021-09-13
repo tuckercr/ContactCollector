@@ -20,7 +20,7 @@ import java.util.*
 /**
  * [RecyclerView.Adapter] that can display [Contact]s
  */
-class ContactRecyclerViewAdapter(private val mValues: List<Contact>) : androidx.recyclerview.widget.RecyclerView.Adapter<ContactRecyclerViewAdapter.ViewHolder>()
+class ContactRecyclerViewAdapter(private val mValues: List<Contact>) : RecyclerView.Adapter<ContactRecyclerViewAdapter.ViewHolder>()
         , FastScrollRecyclerView.SectionedAdapter {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -93,7 +93,7 @@ class ContactRecyclerViewAdapter(private val mValues: List<Contact>) : androidx.
         return mValues.size
     }
 
-    inner class ViewHolder(mView: View) : androidx.recyclerview.widget.RecyclerView.ViewHolder(mView) {
+    inner class ViewHolder(mView: View) : RecyclerView.ViewHolder(mView) {
         val mDisplayNameTextView: TextView = mView.findViewById(R.id.displayNameTextView)
         val mJobTitleTextView: TextView = mView.findViewById(R.id.jobTitleTextView)
         val mCompanyNameTextView: TextView = mView.findViewById(R.id.companyTextView)
@@ -106,7 +106,7 @@ class ContactRecyclerViewAdapter(private val mValues: List<Contact>) : androidx.
     }
 
     override fun getSectionName(position: Int): String {
-        return mValues[position].displayName.substring(0, 1).toUpperCase(Locale.ENGLISH)
+        return mValues[position].displayName.substring(0, 1).uppercase(Locale.ENGLISH)
     }
 
 }

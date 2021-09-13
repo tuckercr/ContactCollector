@@ -1,5 +1,6 @@
 package com.ns4d.contactCollector.java
 
+import android.annotation.SuppressLint
 import android.content.ContentResolver
 import android.content.Context
 import android.database.Cursor
@@ -24,6 +25,7 @@ object ContactsContractUtils {
 
     private const val TAG = "ContactsContractUtils"
 
+    @SuppressLint("Range")
     fun retrieveContacts(context: Context): Boolean {
 
         val cr = context.contentResolver
@@ -258,6 +260,7 @@ object ContactsContractUtils {
      * *
      * @return A HashMap
      */
+    @SuppressLint("Range")
     @Suppress("unused")
     fun getContactsForGroup(resolver: ContentResolver, groupID: String): Map<String, String> {
 

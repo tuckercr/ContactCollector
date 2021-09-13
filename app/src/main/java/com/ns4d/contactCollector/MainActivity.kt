@@ -1,6 +1,5 @@
 package com.ns4d.contactCollector
 
-import android.Manifest
 import android.Manifest.permission.READ_CONTACTS
 import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.content.DialogInterface
@@ -54,7 +53,7 @@ class MainActivity : AppCompatActivity() {
                 .setTitle(R.string.permission_required)
                 .setMessage(R.string.rationale_msg)
                 .setPositiveButton(android.R.string.ok) { _: DialogInterface, _: Int ->
-                    ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.WRITE_EXTERNAL_STORAGE),
+                    ActivityCompat.requestPermissions(this, arrayOf(WRITE_EXTERNAL_STORAGE),
                             PERMISSION_EXTERNAL_STORAGE)
                 }
                 .show()
@@ -103,26 +102,24 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
 
-        when {
-            item.itemId == R.id.action_save ->
+        when (item.itemId) {
+            R.id.action_save ->
                 if (requestExternalStoragePermission()) {
                     saveContacts()
                     return true
                 } else {
                     Log.e(TAG, "Insufficient permission to save!")
                 }
-
-            item.itemId == R.id.action_about -> {
+            R.id.action_about -> {
 
                 val size = ContactRepository.count()
                 val msg = getString(R.string.app_name) + "\nVersion: " + BuildConfig.VERSION_NAME + "." + BuildConfig.VERSION_CODE + "\nFound " + size + " contacts"
                 AlertDialog.Builder(this)
-                        .setTitle(R.string.action_about)
-                        .setMessage(msg)
-                        .show()
+                    .setTitle(R.string.action_about)
+                    .setMessage(msg)
+                    .show()
             }
-
-            item.itemId == R.id.action_reload -> {
+            R.id.action_reload -> {
 
                 if (requestContactsPermission()) {
                     CollectorService.enqueueActionScan(this, 0)
@@ -141,7 +138,7 @@ class MainActivity : AppCompatActivity() {
         AlertDialog.Builder(this)
                 .setTitle(R.string.save)
                 .setMessage(R.string.save_confirmation_msg)
-                .setPositiveButton(android.R.string.yes) { _: DialogInterface, _: Int ->
+                .setPositiveButton(android.R.string.ok) { _: DialogInterface, _: Int ->
 
                     if (isExternalStorageWritable()) {
                         CollectorService.enqueueActionSave(this)
@@ -163,6 +160,8 @@ class MainActivity : AppCompatActivity() {
      * When permission has been granted, keep doing whatever it was we were doing
      */
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
         if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             when (requestCode) {

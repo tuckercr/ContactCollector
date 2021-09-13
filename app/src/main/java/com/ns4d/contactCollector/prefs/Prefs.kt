@@ -19,6 +19,6 @@ object Prefs {
     const val MOST_RECENT = "most.recent.contact"
 
     fun getEditor(context: Context): SharedPreferences.Editor {
-        return context.getSharedPreferences(Prefs.PREFS_FILENAME, 0)!!.edit()
+        return context.getSharedPreferences(PREFS_FILENAME, 0)!!.edit()
     }
 }

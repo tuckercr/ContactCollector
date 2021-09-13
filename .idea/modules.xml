@@ -2,10 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/ContactCollector.iml" filepath="$PROJECT_DIR$/.idea/ContactCollector.iml" />
-      <module fileurl="file://$PROJECT_DIR$/ContactCollector.iml" filepath="$PROJECT_DIR$/ContactCollector.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/ContactCollector.iml" filepath="$PROJECT_DIR$/.idea/modules/ContactCollector.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/app/ContactCollector.app.iml" filepath="$PROJECT_DIR$/.idea/modules/app/ContactCollector.app.iml" />
     </modules>
   </component>
 </project>

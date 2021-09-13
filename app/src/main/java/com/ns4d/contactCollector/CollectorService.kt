@@ -1,6 +1,5 @@
 package com.ns4d.contactCollector
 
-import android.app.IntentService
 import android.content.Context
 import android.content.Intent
 import android.os.Environment.DIRECTORY_DOWNLOADS
@@ -14,7 +13,7 @@ import com.ns4d.contactCollector.prefs.Prefs
 import java.io.*
 
 /**
- * An [IntentService] subclass for the contact scan/collection
+ * A class JobIntentService subclass for the contact scan/collection
  */
 class CollectorService : JobIntentService() {
 
@@ -58,19 +57,19 @@ class CollectorService : JobIntentService() {
                 if (!TextUtils.isEmpty(contact.jobTitle)) {
                     pw.println("jobTitle: ${contact.jobTitle}")
                 }
-                if (!contact.emails.isEmpty()) {
+                if (contact.emails.isNotEmpty()) {
                     pw.println("emails: ${contact.emails}")
                 }
-                if (!contact.phones.isEmpty()) {
+                if (contact.phones.isNotEmpty()) {
                     pw.println("phones: ${contact.phones}")
                 }
-                if (!contact.groups.isEmpty()) {
+                if (contact.groups.isNotEmpty()) {
                     pw.println("groups: ${contact.groups}")
                 }
-                if (!contact.websites.isEmpty()) {
+                if (contact.websites.isNotEmpty()) {
                     pw.println("websites: ${contact.websites}")
                 }
-                if (!contact.misc.isEmpty()) {
+                if (contact.misc.isNotEmpty()) {
                     pw.println("misc: ${contact.misc}")
                 }
                 pw.println("")
